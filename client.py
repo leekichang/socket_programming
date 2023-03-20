@@ -18,6 +18,7 @@ class Client:
     def __init__(self, SERVER_ADDRESS):
         self.socket = socket(AF_INET, SOCK_STREAM)
         self.socket.connect(SERVER_ADDRESS)
+        self.connected = True
         print("Client Connected!")
 
     def send(self):
@@ -26,23 +27,8 @@ class Client:
         print('전송완료')
         if data == 0:
             print("연결 종료")
-
-    # def recv(self):
-    #     # First, receive the length of the data
-    #     data_len_bytes = self.socket.recv(4)
-    #     data_len = int.from_bytes(data_len_bytes, byteorder='big')
-
-    #     # Then, receive the data itself in chunks
-    #     recv_data = []
-    #     while data_len > 0:
-    #         chunk = self.socket.recv(min(data_len, 4096))
-    #         recv_data.append(chunk)
-    #         if len(chunk) < 4096:
-    #             break
-    #         data_len -= len(chunk)
-    #     if not recv_data:
-    #         print('no receive data')
-    #     print('받은 데이터:', pickle.loads(b''.join(recv_data)))
+            self.connected = False
+            self.socket.close()
 
     def recv(self):
         data_total_len     = int(self.socket.recv(1024))
@@ -52,24 +38,25 @@ class Client:
 
         recv_data = []
         while True:
-            chunk = self.socket.recv(data_total_len)
+            chunk = self.socket.recv(buffer_size)
             recv_data.append(chunk)
             left_recv_len -= len(chunk)
             if left_recv_len <= 0:
                 break
-        print(f'받은 데이터:{pickle.loads(b"".join(recv_data))}\n\n{data_total_len}')
-
-    def create_thread(self):
-        self.sender   = threading.Thread(target=self.send)
-        self.sender.daemon = True
-        self.receiver = threading.Thread(target=self.recv)
-        self.sender.daemon = True
+        if not left_recv_len == 0:
+            print("Packet Loss!")
+        else:
+            print(f'받은 데이터:{pickle.loads(b"".join(recv_data))}\n\n{data_total_len}')
     
     def run(self):
         while True:
             self.send()
+            if not self.check_connection():break
             self.recv()
+            if not self.check_connection():break
 
+    def check_connection(self):
+        return self.connected
 
 if __name__ == '__main__':
     args = parse_args()

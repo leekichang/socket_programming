@@ -30,28 +30,12 @@ class Server:
             data_byte = pickle.dumps(data)
             self.client_socket.sendall(str(len(data_byte)).encode())
             time.sleep(1)
-            
+
             self.client_socket.sendall(data_byte)
             print(f"DATA SENT")
             print(f"np.shape(data_byte):{np.shape(data_byte)}")
             print(f"len(data_byte):{len(data_byte)}")
             self.request = None
-
-    # def send(self):
-    #     if self.request != None and self.request != 0:
-    #         data = np.random.rand(self.request)
-    #         data_bytes = pickle.dumps(data)
-    #         data_size = len(data_bytes)
-    #         chunk_size = 4096
-    #         num_chunks = data_size // chunk_size
-    #         if data_size % chunk_size != 0:
-    #             num_chunks += 1
-    #         for i in range(num_chunks):
-    #             start = i * chunk_size
-    #             end = min((i+1) * chunk_size, data_size)
-    #             self.client_socket.send(data_bytes[start:end])
-    #         print("DATA SENT")
-    #         self.request = None
         
     def recv(self):
         recv_data = []
