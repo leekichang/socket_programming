@@ -8,7 +8,7 @@ import argparse
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Socket Programming')
-    parser.add_argument('--p', default=9784)
+    parser.add_argument('--p', default=9784, type=int)
     args = parser.parse_args()
     return args
 
