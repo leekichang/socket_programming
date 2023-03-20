@@ -30,9 +30,9 @@ class Client:
     def recv(self):
         recv_data = []
         while True:
-            chunk = self.socket.recv(1024)
+            chunk = self.socket.recv(4096)
             recv_data.append(chunk)
-            if len(chunk) < 1024:
+            if len(chunk) < 4096:
                 break
         if not recv_data:
             print('no receive data')

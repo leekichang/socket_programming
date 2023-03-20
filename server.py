@@ -35,9 +35,9 @@ class Server:
     def recv(self):
         recv_data = []
         while True:
-            chunk = self.client_socket.recv(1024)
+            chunk = self.client_socket.recv(4096)
             recv_data.append(chunk)
-            if len(chunk) < 1024:
+            if len(chunk) < 4096:
                 break
         # recv_data = self.client_socket.recv(4096)
         data = pickle.loads(b''.join(recv_data))
