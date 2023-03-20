@@ -30,6 +30,7 @@ class Server:
             data_byte = pickle.dumps(data)
             self.client_socket.sendall(str(len(data_byte)).encode())
             time.sleep(1)
+            
             self.client_socket.sendall(data_byte)
             print(f"DATA SENT")
             print(f"np.shape(data_byte):{np.shape(data_byte)}")

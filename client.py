@@ -57,7 +57,7 @@ class Client:
             left_recv_len -= len(chunk)
             if left_recv_len <= 0:
                 break
-        print(f'받은 데이터:{pickle.loads(b"".join(recv_data))}\n\n{total_len}')
+        print(f'받은 데이터:{pickle.loads(b"".join(recv_data))}\n\n{data_total_len}')
 
     def create_thread(self):
         self.sender   = threading.Thread(target=self.send)
