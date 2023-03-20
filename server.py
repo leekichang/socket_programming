@@ -24,14 +24,28 @@ class Server:
         self.request = None
         self.connected = True
 
+    # def send(self):
+    #     if self.request != None and self.request != 0:
+    #         data = np.random.rand(self.request)
+    #         self.client_socket.send(pickle.dumps(data))
+    #         print("DATA SENT")
+    #         self.request = None
     def send(self):
         if self.request != None and self.request != 0:
             data = np.random.rand(self.request)
-            self.client_socket.send(pickle.dumps(data))
+            data_bytes = pickle.dumps(data)
+            data_size = len(data_bytes)
+            chunk_size = 4096
+            num_chunks = data_size // chunk_size
+            if data_size % chunk_size != 0:
+                num_chunks += 1
+            for i in range(num_chunks):
+                start = i * chunk_size
+                end = min((i+1) * chunk_size, data_size)
+                self.client_socket.send(data_bytes[start:end])
             print("DATA SENT")
             self.request = None
         
-    
     def recv(self):
         recv_data = []
         while True:

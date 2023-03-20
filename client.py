@@ -30,13 +30,25 @@ class Client:
     def recv(self):
         recv_data = []
         while True:
-            chunk = self.socket.recv(100000)
-            recv_data.append(chunk)
-            if len(chunk) < 100000:
+            chunk = self.socket.recv(4096)
+            if not chunk:
                 break
+            recv_data.append(chunk)
         if not recv_data:
             print('no receive data')
-        print('받은 데이터:', pickle.loads(b''.join(recv_data)))
+        recv_bytes = b''.join(recv_data)
+        print('받은 데이터:', pickle.loads(recv_bytes))
+
+    # def recv(self):
+    #     recv_data = []
+    #     while True:
+    #         chunk = self.socket.recv(100000)
+    #         recv_data.append(chunk)
+    #         if len(chunk) < 100000:
+    #             break
+    #     if not recv_data:
+    #         print('no receive data')
+    #     print('받은 데이터:', pickle.loads(b''.join(recv_data)))
 
     def create_thread(self):
         self.sender   = threading.Thread(target=self.send)
