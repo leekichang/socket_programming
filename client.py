@@ -19,32 +19,24 @@ class Client:
         self.socket = socket(AF_INET, SOCK_STREAM)
         self.socket.connect(SERVER_ADDRESS)
         print("Client Connected!")
-        self.LOCK = threading.Lock()
 
     def send(self):
-        while True:
-            try:
-                data = int(input('>>>'))
-                self.socket.send(pickle.dumps(data))
-                print('전송완료')
-                if data == 0:
-                    print("연결 종료")
-                    break
-            except:
-                break
+        data = int(input('>>>'))
+        self.socket.send(pickle.dumps(data))
+        print('전송완료')
+        if data == 0:
+            print("연결 종료")
 
     def recv(self):
+        recv_data = []
         while True:
-            recv_data = b''
-            while True:
-                chunk = self.socket.recv(16384)
-                recv_data += chunk
-                if len(chunk) < 16384:
-                    break
-            if not recv_data:
-                print('no receive data')
+            chunk = self.socket.recv(1024)
+            recv_data.append(chunk)
+            if len(chunk) < 1024:
                 break
-            print('받은 데이터:', pickle.loads(recv_data))
+        if not recv_data:
+            print('no receive data')
+        print('받은 데이터:', pickle.loads(b''.join(recv_data)))
 
     def create_thread(self):
         self.sender   = threading.Thread(target=self.send)
@@ -53,11 +45,9 @@ class Client:
         self.sender.daemon = True
     
     def run(self):
-        self.create_thread()
-        self.sender.start()
-        self.receiver.start()
-        self.sender.join()
-        self.receiver.join()
+        while True:
+            self.send()
+            self.recv()
 
 
 if __name__ == '__main__':
