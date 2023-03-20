@@ -28,8 +28,12 @@ class Server:
         if self.request != None and self.request != 0:
             data = np.random.rand(self.request)
             data_byte = pickle.dumps(data)
-            self.client_socket.sendall(pickle.dumps(data))
-            print(f"DATA SENT, len(data_byte):{len(data_byte)}")
+            self.client_socket.sendall(str(len(data_byte)).encode())
+            time.sleep(1)
+            self.client_socket.sendall(data_byte)
+            print(f"DATA SENT")
+            print(f"np.shape(data_byte):{np.shape(data_byte)}")
+            print(f"len(data_byte):{len(data_byte)}")
             self.request = None
 
     # def send(self):

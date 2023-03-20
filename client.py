@@ -45,17 +45,18 @@ class Client:
     #     print('받은 데이터:', pickle.loads(b''.join(recv_data)))
 
     def recv(self):
+        data_total_len     = int(self.client_socket.recv(1024))
+        left_recv_len      = data_total_len
+        buffer_size        = data_total_len
+        time.sleep(1)
+
         recv_data = []
-        total_len = 0
         while True:
-            chunk = self.socket.recv(4096)
+            chunk = self.client_socket.recv(data_total_len)
             recv_data.append(chunk)
-            total_len += len(chunk)
-            print(len(chunk))
-            if len(chunk) < 4096:
+            left_recv_len -= len(chunk)
+            if left_recv_len <= 0:
                 break
-        if not recv_data:
-            print('no receive data')
         print(f'받은 데이터:{pickle.loads(b"".join(recv_data))}\n\n{total_len}')
 
     def create_thread(self):
