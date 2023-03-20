@@ -29,14 +29,19 @@ class Client:
 
     def recv(self):
         recv_data = []
+        print("HI")
         while True:
+            print("HEY~")
             chunk = self.socket.recv(4096)
-            if not chunk:
-                break
+            print("WASSUP")
             recv_data.append(chunk)
-        if not recv_data:
-            print('no receive data')
+            if len(chunk) < 4096:
+                break
+        print("BYE")
         recv_bytes = b''.join(recv_data)
+
+        if not recv_bytes:
+            print('no receive data')
         print('받은 데이터:', pickle.loads(recv_bytes))
 
     # def recv(self):
