@@ -49,6 +49,7 @@ class Client:
         while True:
             chunk = self.socket.recv(4096)
             recv_data.append(chunk)
+            print(len(chunk))
             if len(chunk) < 4096:
                 break
         if not recv_data:
