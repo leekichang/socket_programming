@@ -45,14 +45,14 @@ class Client:
     #     print('받은 데이터:', pickle.loads(b''.join(recv_data)))
 
     def recv(self):
-        data_total_len     = int(self.client_socket.recv(1024))
+        data_total_len     = int(self.socket.recv(1024))
         left_recv_len      = data_total_len
         buffer_size        = data_total_len
         time.sleep(1)
 
         recv_data = []
         while True:
-            chunk = self.client_socket.recv(data_total_len)
+            chunk = self.socket.recv(data_total_len)
             recv_data.append(chunk)
             left_recv_len -= len(chunk)
             if left_recv_len <= 0:
