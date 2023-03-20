@@ -22,38 +22,38 @@ class Client:
 
     def send(self):
         data = int(input('>>>'))
-        self.socket.send(pickle.dumps(data))
+        self.socket.sendall(pickle.dumps(data))
         print('전송완료')
         if data == 0:
             print("연결 종료")
 
-    def recv(self):
-        recv_data = []
-        print("HI")
-        while True:
-            print("HEY~")
-            chunk = self.socket.recv(4096)
-            print("WASSUP")
-            recv_data.append(chunk)
-            if len(chunk) < 4096:
-                break
-        print("BYE")
-        recv_bytes = b''.join(recv_data)
-
-        if not recv_bytes:
-            print('no receive data')
-        print('받은 데이터:', pickle.loads(recv_bytes))
-
     # def recv(self):
+    #     # First, receive the length of the data
+    #     data_len_bytes = self.socket.recv(4)
+    #     data_len = int.from_bytes(data_len_bytes, byteorder='big')
+
+    #     # Then, receive the data itself in chunks
     #     recv_data = []
-    #     while True:
-    #         chunk = self.socket.recv(100000)
+    #     while data_len > 0:
+    #         chunk = self.socket.recv(min(data_len, 4096))
     #         recv_data.append(chunk)
-    #         if len(chunk) < 100000:
+    #         if len(chunk) < 4096:
     #             break
+    #         data_len -= len(chunk)
     #     if not recv_data:
     #         print('no receive data')
     #     print('받은 데이터:', pickle.loads(b''.join(recv_data)))
+
+    def recv(self):
+        recv_data = []
+        while True:
+            chunk = self.socket.recv(4096)
+            recv_data.append(chunk)
+            if len(chunk) < 4096:
+                break
+        if not recv_data:
+            print('no receive data')
+        print('받은 데이터:', pickle.loads(b''.join(recv_data)))
 
     def create_thread(self):
         self.sender   = threading.Thread(target=self.send)
@@ -72,3 +72,5 @@ if __name__ == '__main__':
     SERVER_ADDRESS = (args.ip, args.p)
     client = Client(SERVER_ADDRESS)
     client.run()
+
+
