@@ -7,13 +7,6 @@ import pickle
 import numpy as np
 import argparse
 
-def parse_args():
-    parser = argparse.ArgumentParser(description='Socket Programming')
-    parser.add_argument('--ip', default='127.0.0.1', type=str)
-    parser.add_argument('--p', default=9784, type=int)
-    args = parser.parse_args()
-    return args
-
 class Client:
     def __init__(self, SERVER_ADDRESS):
         self.socket = socket(AF_INET, SOCK_STREAM)
